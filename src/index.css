@@ -2,65 +2,67 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Bilingual AI Task Parser Design System - Professional productivity with Romanian accents */
+/* Modern Cold Pastel Design System - Clean & Minimal */
 
 @layer base {
   :root {
-    /* Base colors - clean and professional */
-    --background: 250 50% 98%;
-    --foreground: 215 25% 15%;
+    /* Base colors - cold pastels */
+    --background: 210 20% 98%;
+    --foreground: 215 25% 20%;
 
     /* Cards and surfaces */
     --card: 0 0% 100%;
-    --card-foreground: 215 25% 15%;
+    --card-foreground: 215 25% 20%;
 
     --popover: 0 0% 100%;
-    --popover-foreground: 215 25% 15%;
+    --popover-foreground: 215 25% 20%;
 
-    /* Primary - Romanian blue accent */
-    --primary: 217 91% 60%;
-    --primary-foreground: 0 0% 98%;
-    --primary-glow: 217 91% 70%;
+    /* Primary - Soft steel blue */
+    --primary: 210 40% 70%;
+    --primary-foreground: 0 0% 100%;
+    --primary-glow: 210 40% 80%;
 
-    /* Secondary - soft professional */
-    --secondary: 220 14% 96%;
-    --secondary-foreground: 215 25% 26%;
+    /* Secondary - Cool gray */
+    --secondary: 220 14% 95%;
+    --secondary-foreground: 215 25% 30%;
 
     /* Muted tones */
-    --muted: 220 14% 96%;
-    --muted-foreground: 215 16% 47%;
+    --muted: 220 14% 95%;
+    --muted-foreground: 215 16% 50%;
 
-    /* Accent - Romanian yellow */
-    --accent: 48 89% 60%;
-    --accent-foreground: 215 25% 15%;
+    /* Accent - Soft mint */
+    --accent: 160 30% 75%;
+    --accent-foreground: 215 25% 20%;
 
-    /* Success and error states */
-    --success: 142 76% 36%;
-    --success-foreground: 0 0% 98%;
-    --warning: 38 92% 50%;
-    --warning-foreground: 0 0% 98%;
-    --destructive: 0 84% 60%;
-    --destructive-foreground: 0 0% 98%;
+    /* Success and error states - pastel variants */
+    --success: 140 30% 65%;
+    --success-foreground: 0 0% 100%;
+    --warning: 45 40% 70%;
+    --warning-foreground: 0 0% 100%;
+    --destructive: 0 35% 75%;
+    --destructive-foreground: 0 0% 100%;
 
     /* Borders and inputs */
-    --border: 220 13% 91%;
-    --input: 220 13% 91%;
-    --ring: 217 91% 60%;
+    --border: 220 13% 90%;
+    --input: 220 13% 94%;
+    --ring: 210 40% 70%;
 
-    /* Romanian flag accent colors */
-    --romanian-blue: 217 91% 60%;
-    --romanian-yellow: 48 89% 60%;
-    --romanian-red: 0 84% 60%;
+    /* Cold pastel accent colors */
+    --pastel-blue: 210 40% 70%;
+    --pastel-purple: 260 30% 75%;
+    --pastel-mint: 160 30% 75%;
+    --pastel-gray: 220 10% 80%;
 
     /* Gradients */
     --gradient-primary: linear-gradient(135deg, hsl(var(--primary)), hsl(var(--primary-glow)));
-    --gradient-hero: linear-gradient(135deg, hsl(var(--romanian-blue)), hsl(var(--romanian-yellow)));
+    --gradient-hero: linear-gradient(135deg, hsl(var(--pastel-blue)), hsl(var(--pastel-mint)));
     --gradient-card: linear-gradient(145deg, hsl(0 0% 100%), hsl(220 14% 98%));
+    --gradient-surface: linear-gradient(180deg, hsl(220 20% 99%), hsl(220 14% 96%));
 
     /* Shadows */
-    --shadow-soft: 0 1px 3px 0 hsl(var(--primary) / 0.1), 0 1px 2px 0 hsl(var(--primary) / 0.06);
-    --shadow-medium: 0 4px 6px -1px hsl(var(--primary) / 0.1), 0 2px 4px -1px hsl(var(--primary) / 0.06);
-    --shadow-large: 0 20px 25px -5px hsl(var(--primary) / 0.1), 0 10px 10px -5px hsl(var(--primary) / 0.04);
+    --shadow-soft: 0 1px 3px 0 hsl(220 15% 50% / 0.08), 0 1px 2px 0 hsl(220 15% 50% / 0.04);
+    --shadow-medium: 0 4px 6px -1px hsl(220 15% 50% / 0.08), 0 2px 4px -1px hsl(220 15% 50% / 0.04);
+    --shadow-large: 0 20px 25px -5px hsl(220 15% 50% / 0.08), 0 10px 10px -5px hsl(220 15% 50% / 0.04);
 
     --radius: 0.75rem;
 
@@ -82,39 +84,40 @@
   }
 
   .dark {
-    --background: 215 28% 17%;
-    --foreground: 220 14% 96%;
+    --background: 220 25% 12%;
+    --foreground: 220 14% 90%;
 
-    --card: 215 25% 19%;
-    --card-foreground: 220 14% 96%;
+    --card: 220 25% 14%;
+    --card-foreground: 220 14% 90%;
 
-    --popover: 215 25% 19%;
-    --popover-foreground: 220 14% 96%;
+    --popover: 220 25% 14%;
+    --popover-foreground: 220 14% 90%;
 
-    --primary: 217 91% 70%;
-    --primary-foreground: 215 28% 17%;
-    --primary-glow: 217 91% 80%;
+    --primary: 210 40% 75%;
+    --primary-foreground: 220 25% 12%;
+    --primary-glow: 210 40% 85%;
 
-    --secondary: 215 25% 22%;
-    --secondary-foreground: 220 14% 96%;
+    --secondary: 220 25% 18%;
+    --secondary-foreground: 220 14% 85%;
 
-    --muted: 215 25% 22%;
-    --muted-foreground: 215 20% 65%;
+    --muted: 220 25% 18%;
+    --muted-foreground: 220 15% 60%;
 
-    --accent: 48 89% 70%;
-    --accent-foreground: 215 28% 17%;
+    --accent: 160 30% 70%;
+    --accent-foreground: 220 25% 12%;
 
-    --success: 142 76% 46%;
-    --warning: 38 92% 60%;
-    --destructive: 0 84% 70%;
+    --success: 140 30% 60%;
+    --warning: 45 40% 65%;
+    --destructive: 0 35% 70%;
 
-    --border: 215 25% 22%;
-    --input: 215 25% 22%;
-    --ring: 217 91% 70%;
+    --border: 220 25% 20%;
+    --input: 220 25% 18%;
+    --ring: 210 40% 75%;
 
     --gradient-primary: linear-gradient(135deg, hsl(var(--primary)), hsl(var(--primary-glow)));
-    --gradient-hero: linear-gradient(135deg, hsl(var(--romanian-blue)), hsl(var(--romanian-yellow)));
-    --gradient-card: linear-gradient(145deg, hsl(215 25% 19%), hsl(215 25% 21%));
+    --gradient-hero: linear-gradient(135deg, hsl(var(--pastel-blue)), hsl(var(--pastel-mint)));
+    --gradient-card: linear-gradient(145deg, hsl(220 25% 14%), hsl(220 25% 16%));
+    --gradient-surface: linear-gradient(180deg, hsl(220 25% 15%), hsl(220 25% 13%));
     --sidebar-background: 240 5.9% 10%;
     --sidebar-foreground: 240 4.8% 95.9%;
     --sidebar-primary: 224.3 76.3% 48%;

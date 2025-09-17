@@ -48,10 +48,11 @@ export default {
           DEFAULT: "hsl(var(--accent))",
           foreground: "hsl(var(--accent-foreground))",
         },
-        romanian: {
-          blue: "hsl(var(--romanian-blue))",
-          yellow: "hsl(var(--romanian-yellow))",
-          red: "hsl(var(--romanian-red))",
+        pastel: {
+          blue: "hsl(var(--pastel-blue))",
+          purple: "hsl(var(--pastel-purple))",
+          mint: "hsl(var(--pastel-mint))",
+          gray: "hsl(var(--pastel-gray))",
         },
         popover: {
           DEFAULT: "hsl(var(--popover))",
