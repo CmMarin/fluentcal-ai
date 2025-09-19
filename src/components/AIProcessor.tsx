@@ -3,7 +3,7 @@ import { useState, useEffect } from 'react';
 // This component will handle the HuggingFace transformers integration
 // Currently using mock data, will be enhanced with actual AI processing
 
-export interface TaskParsingResult {
+export interface ProcessedTask {
   task: string;
   time?: string;
   category: string;
@@ -13,144 +13,86 @@ export interface TaskParsingResult {
   confidence: number;
 }
 
-export const useTaskParser = () => {
-  const [isLoading, setIsLoading] = useState(false);
-  const [model, setModel] = useState<any>(null);
+const parseNaturalLanguage = (input: string, suggestedCategory?: string): ProcessedTask[] => {
+  const lowerInput = input.toLowerCase();
 
-  // Initialize the AI model (will be implemented with HuggingFace)
-  useEffect(() => {
-    const initializeModel = async () => {
-      try {
-        // TODO: Initialize HuggingFace transformers model
-        // const { pipeline } = await import('@huggingface/transformers');
-        // const classifier = await pipeline('text-classification', 'your-model-name');
-        // setModel(classifier);
-        
-        // Mock initialization for now
-        setModel({ initialized: true });
-      } catch (error) {
-        console.error('Failed to initialize AI model:', error);
-      }
-    };
-
-    initializeModel();
-  }, []);
-
-  const parseText = async (text: string): Promise<TaskParsingResult[]> => {
-    setIsLoading(true);
-    
-    try {
-      // Mock AI processing - will be replaced with actual HuggingFace model
-      await new Promise(resolve => setTimeout(resolve, 1500));
+  // Enhanced category detection with bilingual support and context awareness
+  const detectCategory = (text: string): string => {
+    // If there's a suggested category, use it as preference but still validate
+    if (suggestedCategory) {
+      const categoryMap: Record<string, string> = {
+        'schedule': 'Schedule',
+        'finance': 'Finance', 
+        'mail': 'Mail Report',
+        'notes': 'Notes'
+      };
       
-      // Detect language and extract tasks
-      const tasks = extractTasksFromText(text);
-      return tasks;
-    } catch (error) {
-      console.error('Task parsing failed:', error);
-      throw error;
-    } finally {
-      setIsLoading(false);
+      // Check if the text actually matches the suggested category
+      const categoryKeywords: Record<string, RegExp> = {
+        'finance': /\b(plătesc|plata|factură|bani|money|pay|bill|bank|budget|finance|financial|invest|expense|income|salary|cost|euro|dollar|ron|leu)\b/i,
+        'schedule': /\b(întâlnire|meeting|appointment|call|conference|schedule|calendar|reminder|deadline|event|presentation|ora|timp|time|date|when|today|tomorrow|week|month)\b/i,
+        'mail': /\b(mail|email|mesaj|message|send|reply|newsletter|report|communication|letter|contact|scriu|write|trimite|răspund)\b/i,
+        'notes': /\b(notă|note|remember|remind|think|idea|plan|list|task|todo|să fac|trebuie|important)\b/i
+      };
+      
+      if (categoryKeywords[suggestedCategory]?.test(text)) {
+        return categoryMap[suggestedCategory] || 'Notes';
+      }
     }
+    
+    // Financial keywords (Romanian + English)
+    if (/\b(plătesc|plata|factură|bani|money|pay|bill|bank|budget|finance|financial|invest|expense|income|salary|cost|euro|dollar|ron|leu)\b/i.test(text)) {
+      return "Finance";
+    }
+    
+    // Meeting/Schedule keywords  
+    if (/\b(întâlnire|meeting|appointment|call|conference|schedule|calendar|reminder|deadline|event|presentation|ora|timp|time|date|when|today|tomorrow|week|month)\b/i.test(text)) {
+      return "Schedule";
+    }
+    
+    // Email/Communication keywords
+    if (/\b(mail|email|mesaj|message|send|reply|newsletter|report|communication|letter|contact|scriu|write|trimite|răspund)\b/i.test(text)) {
+      return "Mail Report";
+    }
+    
+    // Shopping/Tasks keywords
+    if (/\b(cumpăr|shopping|buy|purchase|store|market|groceries|items|list|să fac|trebuie|task|todo)\b/i.test(text)) {
+      return suggestedCategory ? (suggestedCategory.charAt(0).toUpperCase() + suggestedCategory.slice(1)) : "Notes";
+    }
+    
+    // Default category
+    return suggestedCategory ? (suggestedCategory.charAt(0).toUpperCase() + suggestedCategory.slice(1)) : "Notes";
   };
 
-  return {
-    parseText,
-    isLoading,
-    isModelReady: !!model,
-  };
-};
+  // Extract tasks from input
+  const sentences = input.split(/[.!?]+/).filter(s => s.trim().length > 5);
+  const tasks: ProcessedTask[] = [];
 
-// Mock task extraction logic
-const extractTasksFromText = (text: string): TaskParsingResult[] => {
-  const tasks: TaskParsingResult[] = [];
-  
-  // Simple pattern matching for demonstration
-  const taskPatterns = [
-    // Romanian patterns
-    /(?:trebuie să|să|vreau să)\s+([^.!?]+)/gi,
-    // English patterns
-    /(?:need to|have to|must|should)\s+([^.!?]+)/gi,
-  ];
-
-  // Time patterns
-  const timePatterns = [
-    /(?:la|at)\s+(\d{1,2}(?::\d{2})?\s*(?:AM|PM|dimineața|seara)?)/gi,
-    /(?:mâine|tomorrow|azi|today)/gi,
-  ];
-
-  // Category detection based on keywords
-  const categoryKeywords = {
-    'Work': ['meeting', 'work', 'office', 'project', 'task', 'lucru', 'birou'],
-    'Shopping': ['buy', 'purchase', 'shop', 'store', 'cumpăr', 'magazin', 'cumpără'],
-    'Family': ['kids', 'children', 'school', 'copii', 'școală', 'familie'],
-    'Personal': ['personal', 'myself', 'personal'],
-    'Utilities': ['bill', 'pay', 'electricity', 'water', 'factură', 'plătesc'],
-  };
-
-  let taskId = 1;
-  
-  // Extract potential tasks
-  for (const pattern of taskPatterns) {
-    let match;
-    while ((match = pattern.exec(text)) !== null) {
-      const taskText = match[1].trim();
-      if (taskText.length < 5) continue; // Skip very short matches
+  sentences.forEach((sentence, index) => {
+    const trimmed = sentence.trim();
+    if (trimmed) {
+      const category = detectCategory(trimmed);
+      const language = detectLanguage(trimmed);
       
-      // Detect language
-      const language = detectLanguage(taskText);
+      // Extract time info
+      const timeMatch = trimmed.match(/\b(\d{1,2}:\d{2}|\d{1,2}\s*(AM|PM|dimineața|seara))\b/i);
+      const time = timeMatch ? timeMatch[0] : undefined;
       
-      // Determine category
-      let category = 'Personal';
-      for (const [cat, keywords] of Object.entries(categoryKeywords)) {
-        if (keywords.some(keyword => taskText.toLowerCase().includes(keyword))) {
-          category = cat;
-          break;
-        }
-      }
-      
-      // Extract time information
-      let timeInfo: string | undefined;
-      for (const timePattern of timePatterns) {
-        const timeMatch = timePattern.exec(taskText);
-        if (timeMatch) {
-          timeInfo = timeMatch[0];
-          break;
-        }
-      }
-      
-      // Determine priority based on keywords
+      // Determine priority
       let priority: 'low' | 'medium' | 'high' = 'medium';
-      if (taskText.toLowerCase().includes('urgent') || taskText.toLowerCase().includes('important')) {
-        priority = 'high';
-      }
+      if (/urgent|important|asap|imediat/i.test(trimmed)) priority = 'high';
+      if (/maybe|perhaps|poate/i.test(trimmed)) priority = 'low';
       
       tasks.push({
-        task: taskText,
-        time: timeInfo,
+        task: trimmed,
+        time,
         category,
         priority,
         language,
-        confidence: 0.85, // Mock confidence score
+        confidence: 0.85
       });
-      
-      taskId++;
     }
-  }
+  });
 
   return tasks;
 };
-
-const detectLanguage = (text: string): 'ro' | 'en' | 'mixed' => {
-  const romanianWords = ['să', 'trebuie', 'copii', 'școală', 'cumpăr', 'plătesc', 'factură', 'mâine', 'azi', 'dimineața', 'seara'];
-  const englishWords = ['need', 'have', 'must', 'should', 'meeting', 'tomorrow', 'today', 'children', 'school'];
-  
-  const hasRomanian = romanianWords.some(word => text.toLowerCase().includes(word));
-  const hasEnglish = englishWords.some(word => text.toLowerCase().includes(word));
-  
-  if (hasRomanian && hasEnglish) return 'mixed';
-  if (hasRomanian) return 'ro';
-  return 'en';
-};
-
-export default { useTaskParser };
